@@ -56,8 +56,8 @@ permissions:
   contents: read
 
 jobs:
-  terraform:
-    name: 'Terraform'
+  tf-plan:
+    name: 'Terraform Plan'
     runs-on: ubuntu-latest
     environment: production
 
@@ -65,6 +65,17 @@ jobs:
     defaults:
       run:
         shell: bash
+        
+    env:
+      STORAGE_ACCOUNT: 'tfbackendprodsa4402'
+      CONTAINER_NAME: 'tfstate'
+      RESOURCE_GROUP: 'rg-tf-backend-prod'
+      TF_KEY: 'terraform-prod'
+      # AZURE service principal details
+      ARM_CLIENT_ID: ${{ secrets.arm_client_id }}
+      ARM_CLIENT_SECRET: ${{ secrets.arm_client_secret }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.arm_subscription_id }}
+      ARM_TENANT_ID: ${{ secrets.arm_tenant_id }}
 
     steps:
     # Checkout the repository to the GitHub Actions runner
@@ -74,16 +85,19 @@ jobs:
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
-      with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
-      run: terraform init
+      run: terraform init --backend-config="storage_account_name=$STORAGE_ACCOUNT" --backend-config="container_name=$CONTAINER_NAME" --backend-config="resource_group_name=$RESOURCE_GROUP" --backend-config="key=$TF_KEY"
 
     # Checks that all Terraform configuration files adhere to a canonical format
     - name: Terraform Format
       run: terraform fmt -check
+    
+    # Validates the Terraform configuration files
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
