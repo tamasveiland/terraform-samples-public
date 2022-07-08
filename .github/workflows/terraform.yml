@@ -24,17 +24,17 @@ jobs:
       run:
         shell: bash
         working-directory: 'iac/terraform'
-        
+    
     env:
       STORAGE_ACCOUNT: 'tfbackendprodsa4402'
       CONTAINER_NAME: 'tfstate'
       RESOURCE_GROUP: 'rg-tf-backend-prod'
       TF_KEY: 'terraform-prod'
       # AZURE service principal details
-      ARM_CLIENT_ID: ${{ secrets.arm_client_id }}
-      ARM_CLIENT_SECRET: ${{ secrets.arm_client_secret }}
-      ARM_SUBSCRIPTION_ID: ${{ secrets.arm_subscription_id }}
-      ARM_TENANT_ID: ${{ secrets.arm_tenant_id }}
+      ARM_CLIENT_ID: ${{ secrets.arm_client_id_prod }}
+      ARM_CLIENT_SECRET: ${{ secrets.arm_client_secret_prod }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.arm_subscription_id_prod }}
+      ARM_TENANT_ID: ${{ secrets.arm_tenant_id_prod }}
 
     steps:
     # Checkout the repository to the GitHub Actions runner
