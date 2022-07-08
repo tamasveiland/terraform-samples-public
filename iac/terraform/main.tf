@@ -11,6 +11,9 @@ resource "azurerm_service_plan" "asp" {
   location            = azurerm_resource_group.rg.location
   os_type             = "Linux"
   sku_name            = var.app_svc_plan_sku_name
+  tags = {
+    Has_Toggle = var.enable_web_app
+  }
 }
 
 resource "azurerm_linux_web_app" "example" {
@@ -21,4 +24,8 @@ resource "azurerm_linux_web_app" "example" {
   service_plan_id     = azurerm_service_plan.asp[count.index].id
 
   site_config {}
+
+  tags = {
+    Has_Toggle = var.enable_web_app
+  }
 }
