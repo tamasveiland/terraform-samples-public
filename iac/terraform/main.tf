@@ -5,6 +5,7 @@ resource "azurerm_resource_group" "rg" {
 }
 
 resource "azurerm_service_plan" "asp" {
+  count               = var.enable_web_app ? 1 : 0
   name                = var.app_svc_plan
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
@@ -13,6 +14,7 @@ resource "azurerm_service_plan" "asp" {
 }
 
 resource "azurerm_linux_web_app" "example" {
+  count               = var.enable_web_app ? 1 : 0
   name                = var.app_svc_name
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location

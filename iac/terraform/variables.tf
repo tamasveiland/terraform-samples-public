@@ -17,3 +17,9 @@ variable "app_svc_plan_sku_name" {
 variable "app_svc_name" {
   type = string
 }
+
+### Feature Flags
+variable "enable_web_app" {
+  default = false
+  type    = bool
+}
